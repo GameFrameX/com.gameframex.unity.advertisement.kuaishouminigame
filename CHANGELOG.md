@@ -1,3 +1,10 @@
+# 1.0.0 (2026-05-15)
+
+
+### Features
+
+* initial commit for KuaiShou Mini Game advertisement component ([30b1afb](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/commit/30b1afb63902c871456ce98c4f0a629a7776d111))
+
 ## [1.3.1](https://github.com/gameframex/com.gameframex.unity.advertisement.douyinminigame/compare/1.3.0...1.3.1) (2026-03-03)
 
 
