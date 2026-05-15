@@ -1,0 +1,28 @@
+{
+    "name": "GameFrameX.Advertisement.KuaiShouMiniGame.Runtime",
+    "rootNamespace": "GameFrameX.Advertisement.KuaiShouMiniGame.Runtime",
+    "references": [
+        "GameFrameX.Runtime",
+        "GameFrameX.Event.Runtime",
+        "kuaishou.runtime",
+        "GameFrameX.Advertisement.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "kuaishou-plugin.runtime.dll",
+        "kuaishou-plugin.runtime.editor.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.kuaishou.minigame",
+            "expression": "",
+            "define": "ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT"
+        }
+    ],
+    "noEngineReferences": false
+}
