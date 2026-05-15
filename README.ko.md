@@ -2,7 +2,7 @@
 
 ![GameFrameX Logo](https://download.alianblank.com/gameframex/gameframex_logo_320.png)
 
-# Game Frame X - 쿠아이서우 미니 게임 광고
+# Game Frame X Advertisement (KuaiShou Mini Game)
 
 [![Version](https://img.shields.io/github/v/release/gameframex/com.gameframex.unity.advertisement.kuaishouminigame?label=version&color=green)](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/releases)
 [![License](https://img.shields.io/badge/license-MIT+Apache%202.0-orange.svg)](LICENSE.md)
@@ -10,7 +10,7 @@
 
 **인디 게임 개발자를 위한 올인원 솔루션 · 인디 개발자의 꿈을 실현**
 
-[📖 문서](https://gameframex.doc.alianblank.com) • [🚀 빠른 시작](#빠른-시작)
+[📖 문서](https://gameframex.doc.alianblank.com) • [🚀 빠른 시작](#빠른-시작) • [💬 QQ 그룹](https://qm.qq.com/q/urCUAqJCJm)
 
 ---
 
@@ -22,73 +22,102 @@
 
 ## 프로젝트 개요
 
-GameFrameX 광고 컴포넌트의 쿠아이서우(快手) 미니 게임 어댑터 레이어입니다. 쿠아이서우 미니 게임 SDK를 기반으로 리워드 동영상 광고의 로드, 표시 및 라이프사이클 관리를 래핑합니다.
-
-## 빠른 시작
-
-**방법 1: `manifest.json` 수정**
-
-```json
-{
-  "com.gameframex.unity.advertisement.kuaishouminigame": "https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git"
-}
-```
-
-**방법 2: Unity Package Manager**
-
-`Window > Package Manager`를 열고 `+`를 클릭하여 `Add package from git URL`을 선택한 후 입력:
-
-```
-https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git
-```
-
-**방법 3: 수동 설치**
-
-이 저장소를 Unity 프로젝트의 `Packages/` 디렉토리에 클론하면 자동으로 인식됩니다.
-
-## 사용 예시
-
-이 패키지는 `com.gameframex.unity.advertisement`의 하위 컴포넌트로, 공개 API를 직접 노출하지 않습니다. 메인 광고 패키지를 통해 통일적으로 접근하세요:
-
-- 메인 패키지: [com.gameframex.unity.advertisement](https://github.com/gameframex/com.gameframex.unity.advertisement)
-
-## 아키텍처
+[Game Frame X 광고 시스템](https://github.com/GameFrameX/com.gameframex.unity.advertisement)의 쿠아이서우(快手) 미니 게임 플랫폼 어댑터. 쿠아이서우 미니 게임 플랫폼에 게시되는 게임을 위한 리워드 동영상 광고 통합을 제공합니다.
 
 ### 기능
 
-- 리워드 동영상 광고 로드 및 표시
-- 광고 로드/표시 성공 및 실패 콜백
-- 광고 닫기 시 유효 시청 자동 판정
-- IL2CPP 코드 스트리핑 방지 (`Preserve` 속성 + `CroppingHelper`)
-- 조건부 컴파일 (`UNITY_WEBGL` + `ENABLE_KUAISHOU_MINI_GAME`)
+- 쿠아이서우 미니 게임 SDK 기반 리워드 동영상 광고 지원
+- 광고 자동 로드 및 표시 실패 시 재시도
+- IL2CPP 코드 스트리핑 보호
+- 조건부 컴파일 (`ENABLE_KUAISHOU_MINI_GAME`, `ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT`)
+- Game Frame X 광고 컴포넌트와 원활한 통합
 
-### 의존성
+## 아키텍처
 
-| 의존성 | 설명 |
-|:-------|:-----|
-| `com.gameframex.unity.advertisement` | 메인 광고 패키지, `BaseAdvertisementManager` 기본 클래스 제공 |
-| `KSWASM` | 쿠아이서우 미니 게임 런타임 라이브러리 |
+이 패키지는 Game Frame X 광고 코어의 `BaseAdvertisementManager` **어댑터 구현**입니다. Unity Inspector에서 `AdvertisementComponent`를 설정하면 자동으로 검색 및 로드됩니다.
 
-### 프로젝트 구조
+| 클래스 | 설명 |
+|--------|------|
+| `KuaiShouMiniGameAdvertisementManager` | 리워드 동영상 광고 관리자 — 로드, 표시 및 수명 주기 관리 |
+| `KuaiShouVideoAdCallback` | 광고 로드/표시 이벤트 콜백 핸들러 |
+| `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml 대체 — 타입 참조 유지 |
 
+## 빠른 시작
+
+### 설치
+
+1. [광고 코어 패키지](https://github.com/GameFrameX/com.gameframex.unity.advertisement) 설치
+2. 이 어댑터를 Unity Package Manager (UPM)로 추가:
+
+```json
+{
+  "dependencies": {
+    "com.gameframex.unity.advertisement": "https://github.com/GameFrameX/com.gameframex.unity.advertisement.git",
+    "com.gameframex.unity.advertisement.kuaishouminigame": "https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git"
+  }
+}
 ```
-Runtime/
-├── KuaiShouMiniGame/
-│   ├── DouYinMiniGameAdvertisementManager.cs   # 광고 관리자, BaseAdvertisementManager 상속
-│   └── DouYinVideoAdCallback.cs                # 동영상 광고 콜백 핸들러
-├── GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper.cs  # 스트리핑 방지 헬퍼
-└── GameFrameX.Advertisement.KuaiShouMiniGame.Runtime.asmdef   # 어셈블리 정의
+
+또는 Unity Package Manager 창에서 git URL로 추가.
+
+### 사용 예시
+
+Unity Inspector에서 설정: GameObject에 `AdvertisementComponent`를 추가한 후, 구현 유형 드롭다운에서 `KuaiShouMiniGameAdvertisementManager`를 선택합니다.
+
+```csharp
+using GameFrameX.Advertisement.Runtime;
+
+// 광고 컴포넌트 가져오기 (일반적으로 게임 엔트리에서)
+var adComponent = GameEntry.GetComponent<AdvertisementComponent>();
+
+// 서버 측 검증 데이터 설정 (선택 사항)
+adComponent.SetExtraData("userId", player.UserId);
+
+// 리워드 동영상 광고 재생
+var option = new AdvertisementPlayOption
+{
+    OnSuccess    = (data) => Debug.Log("광고 표시 성공"),
+    OnFail       = (err) => Debug.LogError($"광고 표시 실패: {err}"),
+    OnShowResult = (watched) =>
+    {
+        if (watched)
+        {
+            // 사용자에게 보상 지급
+        }
+    },
+};
+adComponent.Play(option);
 ```
 
 ## 플랫폼 지원
 
-- 코드는 `UNITY_WEBGL`, `ENABLE_KUAISHOU_MINI_GAME` 및 `ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT`이 정의된 경우에만 컴파일됩니다.
+| 플랫폼 | 지원 |
+|--------|------|
+| 쿠아이서우 미니 게임 (WebGL) | 예 |
+| Android | 아니요 |
+| iOS | 아니요 |
+| Standalone | 아니요 |
+
+> `UNITY_WEBGL` 및 `ENABLE_KUAISHOU_MINI_GAME` 스크립트 정의 기호가 필요합니다.
 
 ## 문서 및 자료
 
-- [문서](https://gameframex.doc.alianblank.com)
-- [변경 로그](./CHANGELOG.md)
+- [Game Frame X 문서](https://gameframex.doc.alianblank.com)
+- [쿠아이서우 미니 게임 개발자 포털](https://mp.kuaishou.com/)
+
+## 커뮤니티 및 지원
+
+- QQ 그룹: [가입](https://qm.qq.com/q/urCUAqJCJm)
+- GitHub Issues: [버그 보고](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/issues)
+
+## 변경 로그
+
+### v1.0.0
+
+- 초기 릴리스
+- 쿠아이서우 미니 게임 플랫폼 리워드 동영상 광고 지원
+- IL2CPP 스트리핑 보호
 
 ## 라이선스
 
-[MIT](./LICENSE.md)
+이 프로젝트는 [MIT 라이선스](LICENSE.md) 및 [Apache 라이선스 2.0](LICENSE.md) 듀얼 라이선스입니다.

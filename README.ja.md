@@ -2,7 +2,7 @@
 
 ![GameFrameX Logo](https://download.alianblank.com/gameframex/gameframex_logo_320.png)
 
-# Game Frame X - クアイシォウミニゲーム広告
+# Game Frame X Advertisement (KuaiShou Mini Game)
 
 [![Version](https://img.shields.io/github/v/release/gameframex/com.gameframex.unity.advertisement.kuaishouminigame?label=version&color=green)](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/releases)
 [![License](https://img.shields.io/badge/license-MIT+Apache%202.0-orange.svg)](LICENSE.md)
@@ -10,7 +10,7 @@
 
 **インディゲーム開発者向けオールインワンソリューション · インディ開発者の夢を支援**
 
-[📖 ドキュメント](https://gameframex.doc.alianblank.com) • [🚀 クイックスタート](#クイックスタート)
+[📖 ドキュメント](https://gameframex.doc.alianblank.com) • [🚀 クイックスタート](#クイックスタート) • [💬 QQグループ](https://qm.qq.com/q/urCUAqJCJm)
 
 ---
 
@@ -22,73 +22,102 @@
 
 ## プロジェクト概要
 
-GameFrameX 広告コンポーネントのクアイシォウ（快手）ミニゲーム適配レイヤー。クアイシォウミニゲーム SDK をベースに、リワード動画広告の読み込み、表示、ライフサイクル管理をラップしています。
-
-## クイックスタート
-
-**方法1：`manifest.json` を編集**
-
-```json
-{
-  "com.gameframex.unity.advertisement.kuaishouminigame": "https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git"
-}
-```
-
-**方法2：Unity Package Manager**
-
-`Window > Package Manager` を開き、`+` をクリックして `Add package from git URL` を選択：
-
-```
-https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git
-```
-
-**方法3：手動インストール**
-
-このリポジトリを Unity プロジェクトの `Packages/` ディレクトリにクローンすると自動的に認識されます。
-
-## 使用例
-
-このパッケージは `com.gameframex.unity.advertisement` のサブコンポーネントであり、公開 API を直接公開しません。メイン広告パッケージから統一的にアクセスしてください：
-
-- メインパッケージ：[com.gameframex.unity.advertisement](https://github.com/gameframex/com.gameframex.unity.advertisement)
-
-## アーキテクチャ
+[Game Frame X 広告システム](https://github.com/GameFrameX/com.gameframex.unity.advertisement)の快手（クアイシォウ）ミニゲームプラットフォームアダプター。快手ミニゲームプラットフォームに公開するゲーム向けにリワード動画広告の統合を提供します。
 
 ### 機能
 
-- リワード動画広告の読み込みと表示
-- 広告の読み込み/表示の成功・失敗コールバック
-- 広告クローズ時の有効視聴自動判定
-- IL2CPP コードストリッピング対策（`Preserve` 属性 + `CroppingHelper`）
-- 条件付きコンパイル（`UNITY_WEBGL` + `ENABLE_KUAISHOU_MINI_GAME`）
+- 快手ミニゲーム SDK によるリワード動画広告サポート
+- 広告の自動ロードと表示失敗時のリトライ
+- IL2CPP コードストリッピング保護
+- 条件付きコンパイル（`ENABLE_KUAISHOU_MINI_GAME`、`ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT`）
+- Game Frame X 広告コンポーネントとのシームレスな統合
 
-### 依存関係
+## アーキテクチャ
 
-| 依存関係 | 説明 |
-|:---------|:-----|
-| `com.gameframex.unity.advertisement` | メイン広告パッケージ、`BaseAdvertisementManager` 基底クラスを提供 |
-| `KSWASM` | クアイシォウミニゲームランタイムライブラリ |
+本パッケージは Game Frame X 広告コアの `BaseAdvertisementManager` の**アダプター実装**です。Unity Inspector で `AdvertisementComponent` を設定することで自動的に検出・読み込みされます。
 
-### プロジェクト構成
+| クラス | 説明 |
+|--------|------|
+| `KuaiShouMiniGameAdvertisementManager` | リワード動画広告マネージャー — ロード、表示、ライフサイクル管理 |
+| `KuaiShouVideoAdCallback` | 広告ロード/表示イベントのコールバックハンドラー |
+| `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml の代替 — 型参照を保持 |
 
+## クイックスタート
+
+### インストール
+
+1. [広告コアパッケージ](https://github.com/GameFrameX/com.gameframex.unity.advertisement)をインストール
+2. 本アダプターを Unity Package Manager (UPM) で追加：
+
+```json
+{
+  "dependencies": {
+    "com.gameframex.unity.advertisement": "https://github.com/GameFrameX/com.gameframex.unity.advertisement.git",
+    "com.gameframex.unity.advertisement.kuaishouminigame": "https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git"
+  }
+}
 ```
-Runtime/
-├── KuaiShouMiniGame/
-│   ├── DouYinMiniGameAdvertisementManager.cs   # 広告マネージャー、BaseAdvertisementManager を継承
-│   └── DouYinVideoAdCallback.cs                # 動画広告コールバックハンドラー
-├── GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper.cs  # ストリッピング防止ヘルパー
-└── GameFrameX.Advertisement.KuaiShouMiniGame.Runtime.asmdef   # アセンブリ定義
+
+または Unity Package Manager ウィンドウで git URL から追加。
+
+### 使用例
+
+Unity Inspector で設定：GameObject に `AdvertisementComponent` を追加し、実装タイプのドロップダウンから `KuaiShouMiniGameAdvertisementManager` を選択します。
+
+```csharp
+using GameFrameX.Advertisement.Runtime;
+
+// 広告コンポーネントを取得（通常はゲームエントリから）
+var adComponent = GameEntry.GetComponent<AdvertisementComponent>();
+
+// サーバーサイド検証データを設定（オプション）
+adComponent.SetExtraData("userId", player.UserId);
+
+// リワード動画広告を再生
+var option = new AdvertisementPlayOption
+{
+    OnSuccess    = (data) => Debug.Log("広告の表示に成功しました"),
+    OnFail       = (err) => Debug.LogError($"広告の表示に失敗しました: {err}"),
+    OnShowResult = (watched) =>
+    {
+        if (watched)
+        {
+            // ユーザーに報酬を付与
+        }
+    },
+};
+adComponent.Play(option);
 ```
 
 ## プラットフォーム対応
 
-- コードは `UNITY_WEBGL`、`ENABLE_KUAISHOU_MINI_GAME`、および `ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT` が定義されている場合のみコンパイルされます。
+| プラットフォーム | 対応 |
+|------------------|------|
+| 快手ミニゲーム (WebGL) | はい |
+| Android | いいえ |
+| iOS | いいえ |
+| Standalone | いいえ |
+
+> `UNITY_WEBGL` と `ENABLE_KUAISHOU_MINI_GAME` スクリプト定義シンボルが必要です。
 
 ## ドキュメントとリソース
 
-- [ドキュメント](https://gameframex.doc.alianblank.com)
-- [変更履歴](./CHANGELOG.md)
+- [Game Frame X ドキュメント](https://gameframex.doc.alianblank.com)
+- [快手ミニゲーム開発者ポータル](https://mp.kuaishou.com/)
+
+## コミュニティとサポート
+
+- QQグループ：[参加](https://qm.qq.com/q/urCUAqJCJm)
+- GitHub Issues：[バグ報告](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/issues)
+
+## 変更履歴
+
+### v1.0.0
+
+- 初回リリース
+- 快手ミニゲームプラットフォームのリワード動画広告対応
+- IL2CPP ストリッピング保護
 
 ## ライセンス
 
-[MIT](./LICENSE.md)
+本プロジェクトは [MIT ライセンス](LICENSE.md) および [Apache ライセンス 2.0](LICENSE.md) のデュアルライセンスです。

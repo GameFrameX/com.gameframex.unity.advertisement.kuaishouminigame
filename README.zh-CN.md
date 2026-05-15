@@ -2,7 +2,7 @@
 
 ![GameFrameX Logo](https://download.alianblank.com/gameframex/gameframex_logo_320.png)
 
-# Game Frame X - 快手小游戏广告
+# Game Frame X Advertisement (KuaiShou Mini Game)
 
 [![Version](https://img.shields.io/github/v/release/gameframex/com.gameframex.unity.advertisement.kuaishouminigame?label=version&color=green)](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/releases)
 [![License](https://img.shields.io/badge/license-MIT+Apache%202.0-orange.svg)](LICENSE.md)
@@ -10,7 +10,7 @@
 
 **独立游戏前后端一体化解决方案 · 独立游戏开发者的圆梦大使**
 
-[📖 文档](https://gameframex.doc.alianblank.com) • [🚀 快速开始](#快速开始)
+[📖 文档](https://gameframex.doc.alianblank.com) • [🚀 快速开始](#快速开始) • [💬 QQ群](https://qm.qq.com/q/urCUAqJCJm)
 
 ---
 
@@ -22,73 +22,102 @@
 
 ## 项目简介
 
-GameFrameX 广告组件的快手小游戏适配层，基于快手小游戏 SDK 封装激励视频广告的加载、展示与生命周期管理。
-
-## 快速开始
-
-**方式一：修改 `manifest.json`**
-
-```json
-{
-  "com.gameframex.unity.advertisement.kuaishouminigame": "https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git"
-}
-```
-
-**方式二：Unity Package Manager**
-
-打开 `Window > Package Manager`，点击 `+` 选择 `Add package from git URL`，输入：
-
-```
-https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git
-```
-
-**方式三：手动安装**
-
-将本仓库克隆到 Unity 项目的 `Packages/` 目录下即可自动识别。
-
-## 使用示例
-
-本包为 `com.gameframex.unity.advertisement` 的子组件，不直接对外暴露接口。请通过主广告包统一调用：
-
-- 主广告包：[com.gameframex.unity.advertisement](https://github.com/gameframex/com.gameframex.unity.advertisement)
-
-## 架构概览
+[Game Frame X 广告系统](https://github.com/GameFrameX/com.gameframex.unity.advertisement)的快手小游戏平台适配器。为发布到快手小游戏平台的游戏提供激励视频广告集成。
 
 ### 功能特性
 
-- 激励视频广告加载与展示
-- 广告加载/展示成功与失败回调
-- 广告关闭时自动判断有效观看
-- IL2CPP 代码裁剪防护（`Preserve` 属性 + `CroppingHelper`）
-- 条件编译（`UNITY_WEBGL` + `ENABLE_KUAISHOU_MINI_GAME`）
+- 基于快手小游戏 SDK 的激励视频广告支持
+- 自动加载广告，展示失败自动重试
+- IL2CPP 代码裁剪保护
+- 条件编译（`ENABLE_KUAISHOU_MINI_GAME`、`ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT`）
+- 与 Game Frame X 广告组件无缝集成
 
-### 依赖
+## 架构概览
 
-| 依赖 | 说明 |
-|:-----|:-----|
-| `com.gameframex.unity.advertisement` | 广告主包，提供 `BaseAdvertisementManager` 基类 |
-| `KSWASM` | 快手小游戏运行时库 |
+本包是 Game Frame X 广告核心 `BaseAdvertisementManager` 的**适配器实现**。通过 Unity Inspector 配置 `AdvertisementComponent` 后，自动发现并加载。
 
-### 项目结构
+| 类 | 说明 |
+|----|------|
+| `KuaiShouMiniGameAdvertisementManager` | 激励视频广告管理器 — 加载、展示及生命周期管理 |
+| `KuaiShouVideoAdCallback` | 广告加载/展示事件回调处理器 |
+| `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml 替代方案 — 保留类型引用 |
 
+## 快速开始
+
+### 安装
+
+1. 安装[广告核心包](https://github.com/GameFrameX/com.gameframex.unity.advertisement)
+2. 通过 Unity Package Manager (UPM) 添加本适配器：
+
+```json
+{
+  "dependencies": {
+    "com.gameframex.unity.advertisement": "https://github.com/GameFrameX/com.gameframex.unity.advertisement.git",
+    "com.gameframex.unity.advertisement.kuaishouminigame": "https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git"
+  }
+}
 ```
-Runtime/
-├── KuaiShouMiniGame/
-│   ├── DouYinMiniGameAdvertisementManager.cs   # 广告管理器，继承 BaseAdvertisementManager
-│   └── DouYinVideoAdCallback.cs                # 视频广告回调处理器
-├── GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper.cs  # 防裁剪辅助类
-└── GameFrameX.Advertisement.KuaiShouMiniGame.Runtime.asmdef   # 程序集定义
+
+或在 Unity Package Manager 窗口中通过 git URL 添加。
+
+### 使用示例
+
+在 Unity Inspector 中配置：将 `AdvertisementComponent` 添加到 GameObject，然后在实现类型下拉框中选择 `KuaiShouMiniGameAdvertisementManager`。
+
+```csharp
+using GameFrameX.Advertisement.Runtime;
+
+// 获取广告组件（通常从游戏入口获取）
+var adComponent = GameEntry.GetComponent<AdvertisementComponent>();
+
+// 设置服务端验证数据（可选）
+adComponent.SetExtraData("userId", player.UserId);
+
+// 播放激励视频广告
+var option = new AdvertisementPlayOption
+{
+    OnSuccess    = (data) => Debug.Log("广告展示成功"),
+    OnFail       = (err) => Debug.LogError($"广告展示失败: {err}"),
+    OnShowResult = (watched) =>
+    {
+        if (watched)
+        {
+            // 发放奖励
+        }
+    },
+};
+adComponent.Play(option);
 ```
 
 ## 平台支持
 
-- 代码仅在 `UNITY_WEBGL` 且定义了 `ENABLE_KUAISHOU_MINI_GAME` 和 `ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT` 宏时编译。
+| 平台 | 支持 |
+|------|------|
+| 快手小游戏 (WebGL) | 是 |
+| Android | 否 |
+| iOS | 否 |
+| Standalone | 否 |
+
+> 需要 `UNITY_WEBGL` 和 `ENABLE_KUAISHOU_MINI_GAME` 脚本宏定义。
 
 ## 文档与资源
 
-- [文档](https://gameframex.doc.alianblank.com)
-- [更新日志](./CHANGELOG.md)
+- [Game Frame X 文档](https://gameframex.doc.alianblank.com)
+- [快手小游戏开发者平台](https://mp.kuaishou.com/)
+
+## 社区与支持
+
+- QQ群：[加入](https://qm.qq.com/q/urCUAqJCJm)
+- GitHub Issues：[报告问题](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/issues)
+
+## 更新日志
+
+### v1.0.0
+
+- 初始发布
+- 支持快手小游戏平台激励视频广告
+- IL2CPP 裁剪保护
 
 ## 开源协议
 
-[MIT](./LICENSE.md)
+本项目基于 [MIT 许可证](LICENSE.md) 和 [Apache 许可证 2.0](LICENSE.md) 双重授权。
