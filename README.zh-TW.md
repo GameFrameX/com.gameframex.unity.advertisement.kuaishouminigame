@@ -67,7 +67,7 @@
 ```csharp
 using GameFrameX.Advertisement.Runtime;
 
-// 取得廣告元件（通常從遊戲入口取得）
+// 標準方式：透過 GameEntry（不依賴 com.gameframex.unity.entry）
 var adComponent = GameEntry.GetComponent<AdvertisementComponent>();
 
 // 設定伺服器端驗證資料（可選）
@@ -87,6 +87,22 @@ var option = new AdvertisementPlayOption
     },
 };
 adComponent.Play(option);
+
+// 快捷方式：透過 GameApp（需要 com.gameframex.unity.entry）
+GameApp.Advertisement.SetExtraData("userId", player.UserId);
+var option2 = new AdvertisementPlayOption
+{
+    OnSuccess    = (data) => Debug.Log("廣告展示成功"),
+    OnFail       = (err) => Debug.LogError($"廣告展示失敗: {err}"),
+    OnShowResult = (watched) =>
+    {
+        if (watched)
+        {
+            // 發放獎勵
+        }
+    },
+};
+GameApp.Advertisement.Play(option2);
 ```
 
 ## 平台支援

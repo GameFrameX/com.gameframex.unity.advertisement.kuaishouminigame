@@ -67,7 +67,7 @@ Configure in Unity Inspector: add the `AdvertisementComponent` to a GameObject, 
 ```csharp
 using GameFrameX.Advertisement.Runtime;
 
-// Get the advertisement component (typically from your game entry)
+// Standard: via GameEntry (no dependency on com.gameframex.unity.entry)
 var adComponent = GameEntry.GetComponent<AdvertisementComponent>();
 
 // Set server-side verification data (optional)
@@ -87,6 +87,22 @@ var option = new AdvertisementPlayOption
     },
 };
 adComponent.Play(option);
+
+// Shortcut: via GameApp (requires com.gameframex.unity.entry)
+GameApp.Advertisement.SetExtraData("userId", player.UserId);
+var option2 = new AdvertisementPlayOption
+{
+    OnSuccess    = (data) => Debug.Log("Ad shown successfully"),
+    OnFail       = (err) => Debug.LogError($"Ad failed: {err}"),
+    OnShowResult = (watched) =>
+    {
+        if (watched)
+        {
+            // Reward the user
+        }
+    },
+};
+GameApp.Advertisement.Play(option2);
 ```
 
 ## Platform Support
