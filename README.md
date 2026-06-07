@@ -20,6 +20,7 @@ All-in-One Solution for Indie Game Development · Empowering Indie Developers' D
 **English** | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) | [日本語](README.ja.md) | [한국어](README.ko.md)
 
 </div>
+
 ## Project Overview
 
 KuaiShou Mini Game platform adapter for the [Game Frame X Advertisement](https://github.com/GameFrameX/com.gameframex.unity.advertisement) system. This package provides rewarded video ad integration for games published on the KuaiShou Mini Game platform.
