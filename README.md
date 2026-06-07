@@ -104,6 +104,13 @@ Then add the package to `dependencies`:
 - Rewarded video ad support for KuaiShou Mini Game platform
 - IL2CPP cropping protection
 
+
+## Dependencies
+
+| Package | Description |
+|---------|-------------|
+| (无) | - |
+
 ## License
 
 See [LICENSE.md](LICENSE.md) for license information.
