@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/compare/1.0.0...1.0.1) (2026-06-08)
+
+
+### Bug Fixes
+
+* 补全包规范文件（LICENSE/CHANGELOG/URL 字段/unity 字段） ([3429218](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/commit/3429218bf359851eaf16cfc4764b0636c68de193))
+
 # 1.0.0 (2026-05-15)
 
 
