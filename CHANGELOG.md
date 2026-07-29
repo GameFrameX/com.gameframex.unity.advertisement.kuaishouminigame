@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/compare/1.0.1...1.1.0) (2026-07-29)
+
+
+### Features
+
+* 添加依赖项以支持功能模块 ([e2a97be](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/commit/e2a97bed8cc82a94544d8beb5783bbbc3cd89a54))
+
 ## [1.0.1](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/compare/1.0.0...1.0.1) (2026-06-08)
 
 
