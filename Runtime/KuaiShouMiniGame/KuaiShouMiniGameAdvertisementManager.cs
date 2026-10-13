@@ -1,7 +1,6 @@
 #if UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT
 
 using System;
-using GameFrameX.Advertisement.DouYinMiniGame.Runtime;
 using GameFrameX.Advertisement.Runtime;
 using GameFrameX.Runtime;
 using UnityEngine;
@@ -14,13 +13,44 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
     /// </summary>
     /// <remarks>
     /// KuaiShou mini-game rewarded video advertisement manager, responsible for ad loading, display, and lifecycle management.
+    /// 渠道身份常量 <see cref="ChannelId"/> 供注册表互斥解析与显式路由使用；初始化统一走
+    /// <see cref="Initialize(AdvertisementConfig)"/> 的强类型 <see cref="KuaiShouMiniGameAdvertisementConfig"/>
+    /// （由 KuaiShouMiniGameAdvertisementBootstrap 工厂闭包注入，adUnitId 自组件宏选字段下沉而来）。
     /// </remarks>
     [Preserve]
     public class KuaiShouMiniGameAdvertisementManager : BaseAdvertisementManager
     {
+        /// <summary>
+        /// 快手小游戏渠道唯一标识。
+        /// </summary>
+        [Preserve]
+        public const string ChannelId = "kuaishouminigame";
+
         private KSWASM.RewardVideoAd _adManager;
         private string _adUnitId;
         private KuaiShouVideoAdCallback _kuaiShouVideoAdCallback;
+
+        /// <summary>
+        /// 使用强类型配置初始化快手小游戏广告管理器。
+        /// </summary>
+        /// <remarks>
+        /// Initializes the ad manager with the strongly-typed KuaiShou mini-game configuration.
+        /// </remarks>
+        /// <param name="config">快手小游戏渠道配置 / KuaiShou mini-game channel configuration</param>
+        [Preserve]
+        public override void Initialize(AdvertisementConfig config)
+        {
+            var kuaiShouConfig = config as KuaiShouMiniGameAdvertisementConfig;
+            if (kuaiShouConfig == null)
+            {
+                throw new ArgumentException("Config must be KuaiShouMiniGameAdvertisementConfig", nameof(config));
+            }
+
+            GameFrameworkGuard.NotNullOrEmpty(kuaiShouConfig.adUnitId, nameof(kuaiShouConfig.adUnitId));
+#pragma warning disable CS0618
+            Initialize(kuaiShouConfig.adUnitId, kuaiShouConfig.isDebug);
+#pragma warning restore CS0618
+        }
 
         /// <summary>
         /// 初始化快手小游戏广告管理器。

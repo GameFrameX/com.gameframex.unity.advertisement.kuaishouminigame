@@ -17,7 +17,9 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         {
 #if UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT
             _ = typeof(KuaiShouMiniGameAdvertisementManager);
-            _ = typeof(GameFrameX.Advertisement.DouYinMiniGame.Runtime.KuaiShouVideoAdCallback);
+            _ = typeof(KuaiShouVideoAdCallback);
+            _ = typeof(KuaiShouMiniGameAdvertisementConfig);
+            _ = typeof(KuaiShouMiniGameAdvertisementBootstrap);
 #endif
         }
     }
