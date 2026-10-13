@@ -35,13 +35,15 @@
 
 ## 架構概覽
 
-本套件是 Game Frame X 廣告核心 `BaseAdvertisementManager` 的**適配器實現**。透過 Unity Inspector 設定 `AdvertisementComponent` 後，自動發現並載入。
+本套件是 Game Frame X 廣告核心 `BaseAdvertisementManager` 的**適配器實現**。透過 `KuaiShouMiniGameAdvertisementBootstrap` 在 `BeforeSceneLoad` 階段把渠道工廠自註冊進主套件 `AdvertisementRegistry`；當巨集 `UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT` 未啟用時代碼被裁剪，註冊不會發生（引用即註冊）。初始化由工廠閉包注入強型別配置。
 
 | 類別 | 說明 |
 |------|------|
 | `KuaiShouMiniGameAdvertisementManager` | 激勵影片廣告管理器 — 載入、展示及生命週期管理 |
 | `KuaiShouVideoAdCallback` | 廣告載入/展示事件回調處理器 |
 | `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml 替代方案 — 保留類型引用 |
+| `KuaiShouMiniGameAdvertisementConfig` | 強型別渠道配置 — 含 `adUnitId` 欄位 |
+| `KuaiShouMiniGameAdvertisementBootstrap` | 渠道啟動註冊 — `BeforeSceneLoad` 自註冊進 `AdvertisementRegistry`，含啟動期 `Config` 靜態屬性 |
 
 ## 快速開始
 
@@ -77,6 +79,22 @@
    ```
 3. 在 Unity 的 `Package Manager` 中使用 `Git URL` 的方式添加庫，地址為：`https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git`
 4. 直接下載倉庫放置到 Unity 專案的 `Packages` 目錄下，會自動載入識別。
+
+### 渠道註冊與配置
+
+啟動期（首次廣告呼叫前）對 `KuaiShouMiniGameAdvertisementBootstrap.Config` 賦值，注入強型別渠道配置：
+
+```csharp
+using GameFrameX.Advertisement.KuaiShouMiniGame.Runtime;
+
+KuaiShouMiniGameAdvertisementBootstrap.Config = new KuaiShouMiniGameAdvertisementConfig
+{
+    adUnitId = "你的廣告位ID",
+    isDebug = false,
+};
+```
+
+渠道常數 `KuaiShouMiniGameAdvertisementManager.ChannelId` 的值為 `"kuaishouminigame"`；顯式路由 `AdvertisementRegistry.ResolveManager("kuaishouminigame")` 可用。
 ## 平台支援
 
 | 平台 | 支援 |
@@ -105,6 +123,12 @@
 - 初始發佈
 - 支援快手小遊戲平台激勵影片廣告
 - IL2CPP 裁剪保護
+
+### 破壞性變更與遷移
+
+- `AdvertisementComponent` 上的 WebGL 快手廣告位ID 巨選序列化欄位已移除，`adUnitId` 改經 `KuaiShouMiniGameAdvertisementBootstrap.Config` 注入；
+- 主套件 Inspector 類型下拉已移除，渠道發現統一收斂到 `AdvertisementRegistry`；
+- 自抖音渠道包複製遺留的命名檔案已更正為 `KuaiShou` 命名（`KuaiShouMiniGameAdvertisementManager.cs`、`KuaiShouVideoAdCallback.cs`，命名空間 `GameFrameX.Advertisement.KuaiShouMiniGame.Runtime`）。
 
 
 ## 依賴

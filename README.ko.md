@@ -35,13 +35,15 @@
 
 ## 아키텍처
 
-이 패키지는 Game Frame X 광고 코어의 `BaseAdvertisementManager` **어댑터 구현**입니다. Unity Inspector에서 `AdvertisementComponent`를 설정하면 자동으로 검색 및 로드됩니다.
+이 패키지는 Game Frame X 광고 코어의 `BaseAdvertisementManager` **어댑터 구현**입니다. `KuaiShouMiniGameAdvertisementBootstrap`가 `BeforeSceneLoad` 단계에서 코어의 `AdvertisementRegistry`에 자동 등록합니다. 매크로 `UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT`가 활성화되지 않으면 코드가 스트리핑되어 등록이 일어나지 않습니다(참조 곧 등록). 초기화는 팩토리 클로저를 통해 강타입 설정을 주입합니다.
 
 | 클래스 | 설명 |
 |--------|------|
 | `KuaiShouMiniGameAdvertisementManager` | 리워드 동영상 광고 관리자 — 로드, 표시 및 수명 주기 관리 |
 | `KuaiShouVideoAdCallback` | 광고 로드/표시 이벤트 콜백 핸들러 |
 | `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml 대체 — 타입 참조 유지 |
+| `KuaiShouMiniGameAdvertisementConfig` | 강타입 채널 설정 — `adUnitId` 필드 포함 |
+| `KuaiShouMiniGameAdvertisementBootstrap` | 채널 시작 등록 — `BeforeSceneLoad`에서 `AdvertisementRegistry`에 자동 등록, 시작 시점 `Config` 정적 속성 포함 |
 
 ## 빠른 시작
 
@@ -77,6 +79,22 @@
    ```
 3. Unity의 **Package Manager**에서 **Git URL**을 사용하여 추가: `https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git`
 4. 리포지토리를 Unity 프로젝트의 `Packages` 디렉토리에 클론하세요. 자동으로 로드됩니다.
+
+### 채널 등록 및 설정
+
+시작 시점(첫 광고 호출 전)에 `KuaiShouMiniGameAdvertisementBootstrap.Config`에 값을 할당하여 강타입 채널 설정을 주입합니다:
+
+```csharp
+using GameFrameX.Advertisement.KuaiShouMiniGame.Runtime;
+
+KuaiShouMiniGameAdvertisementBootstrap.Config = new KuaiShouMiniGameAdvertisementConfig
+{
+    adUnitId = "광고 유닛 ID",
+    isDebug = false,
+};
+```
+
+채널 상수 `KuaiShouMiniGameAdvertisementManager.ChannelId`의 값은 `"kuaishouminigame"`입니다. 명시적 라우팅 `AdvertisementRegistry.ResolveManager("kuaishouminigame")`도 사용할 수 있습니다.
 ## 플랫폼 지원
 
 | 플랫폼 | 지원 |
@@ -105,6 +123,12 @@
 - 초기 릴리스
 - 쿠아이서우 미니 게임 플랫폼 리워드 동영상 광고 지원
 - IL2CPP 스트리핑 보호
+
+### 파괴적 변경 및 마이그레이션
+
+- `AdvertisementComponent`의 WebGL 쿠아이서우 매크로 선택 광고 유닛 ID 직렬화 필드가 제거되었습니다. `adUnitId`는 이제 `KuaiShouMiniGameAdvertisementBootstrap.Config`를 통해 주입됩니다;
+- 코어 패키지의 Inspector 타입 드롭다운이 제거되었으며, 채널 발견은 `AdvertisementRegistry`로 통합되었습니다;
+- 더우인 채널 패키지에서 복사된 기존 명명 파일이 `KuaiShou` 명명으로 수정되었습니다(`KuaiShouMiniGameAdvertisementManager.cs`, `KuaiShouVideoAdCallback.cs`, 네임스페이스 `GameFrameX.Advertisement.KuaiShouMiniGame.Runtime`).
 
 
 ## 의존성

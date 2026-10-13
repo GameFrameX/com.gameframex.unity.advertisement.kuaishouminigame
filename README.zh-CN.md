@@ -35,13 +35,15 @@
 
 ## 架构概览
 
-本包是 Game Frame X 广告核心 `BaseAdvertisementManager` 的**适配器实现**。通过 Unity Inspector 配置 `AdvertisementComponent` 后，自动发现并加载。
+本包是 Game Frame X 广告核心 `BaseAdvertisementManager` 的**适配器实现**。通过 `KuaiShouMiniGameAdvertisementBootstrap` 在 `BeforeSceneLoad` 阶段把渠道工厂自注册进主包 `AdvertisementRegistry`；当宏 `UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT` 未启用时代码被裁剪，注册不会发生（引用即注册）。初始化由工厂闭包注入强类型配置。
 
 | 类 | 说明 |
 |----|------|
 | `KuaiShouMiniGameAdvertisementManager` | 激励视频广告管理器 — 加载、展示及生命周期管理 |
 | `KuaiShouVideoAdCallback` | 广告加载/展示事件回调处理器 |
 | `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml 替代方案 — 保留类型引用 |
+| `KuaiShouMiniGameAdvertisementConfig` | 强类型渠道配置 — 含 `adUnitId` 字段 |
+| `KuaiShouMiniGameAdvertisementBootstrap` | 渠道启动注册 — `BeforeSceneLoad` 自注册进 `AdvertisementRegistry`，含启动期 `Config` 静态属性 |
 
 ## 快速开始
 
@@ -77,6 +79,22 @@
    ```
 3. 在 Unity 的 `Package Manager` 中使用 `Git URL` 的方式添加库，地址为：`https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git`
 4. 直接下载仓库放置到 Unity 项目的 `Packages` 目录下，会自动加载识别。
+
+### 渠道注册与配置
+
+启动期（首次广告调用前）对 `KuaiShouMiniGameAdvertisementBootstrap.Config` 赋值，注入强类型渠道配置：
+
+```csharp
+using GameFrameX.Advertisement.KuaiShouMiniGame.Runtime;
+
+KuaiShouMiniGameAdvertisementBootstrap.Config = new KuaiShouMiniGameAdvertisementConfig
+{
+    adUnitId = "你的广告位ID",
+    isDebug = false,
+};
+```
+
+渠道常量 `KuaiShouMiniGameAdvertisementManager.ChannelId` 的值为 `"kuaishouminigame"`；显式路由 `AdvertisementRegistry.ResolveManager("kuaishouminigame")` 可用。
 ## 平台支持
 
 | 平台 | 支持 |
@@ -105,6 +123,12 @@
 - 初始发布
 - 支持快手小游戏平台激励视频广告
 - IL2CPP 裁剪保护
+
+### 破坏性变更与迁移
+
+- `AdvertisementComponent` 上的 WebGL 快手广告位ID 宏选序列化字段已移除，`adUnitId` 改经 `KuaiShouMiniGameAdvertisementBootstrap.Config` 注入；
+- 主包 Inspector 类型下拉已移除，渠道发现统一收敛到 `AdvertisementRegistry`；
+- 自抖音渠道包复制遗留的命名文件已更正为 `KuaiShou` 命名（`KuaiShouMiniGameAdvertisementManager.cs`、`KuaiShouVideoAdCallback.cs`，命名空间 `GameFrameX.Advertisement.KuaiShouMiniGame.Runtime`）。
 
 
 ## 依赖

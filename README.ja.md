@@ -35,13 +35,15 @@
 
 ## アーキテクチャ
 
-本パッケージは Game Frame X 広告コアの `BaseAdvertisementManager` の**アダプター実装**です。Unity Inspector で `AdvertisementComponent` を設定することで自動的に検出・読み込みされます。
+本パッケージは Game Frame X 広告コアの `BaseAdvertisementManager` の**アダプター実装**です。`KuaiShouMiniGameAdvertisementBootstrap` が `BeforeSceneLoad` ステージでコアの `AdvertisementRegistry` に自己登録します。マクロ `UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT` が有効でない場合、コードはストリッピングされ登録も行われません（参照即登録）。初期化はファクトリークロージャーにより強く型付けされた設定を注入します。
 
 | クラス | 説明 |
 |--------|------|
 | `KuaiShouMiniGameAdvertisementManager` | リワード動画広告マネージャー — ロード、表示、ライフサイクル管理 |
 | `KuaiShouVideoAdCallback` | 広告ロード/表示イベントのコールバックハンドラー |
 | `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml の代替 — 型参照を保持 |
+| `KuaiShouMiniGameAdvertisementConfig` | 強く型付けされたチャネル設定 — `adUnitId` フィールドを含む |
+| `KuaiShouMiniGameAdvertisementBootstrap` | チャネルの起動登録 — `BeforeSceneLoad` で `AdvertisementRegistry` に自己登録、起動時 `Config` 静的プロパティを含む |
 
 ## クイックスタート
 
@@ -77,6 +79,22 @@
    ```
 3. Unity の **Package Manager** で **Git URL** を使用して追加：`https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git`
 4. リポジトリを Unity プロジェクトの `Packages` ディレクトリにクローンしてください。自動的に読み込まれます。
+
+### チャネル登録と設定
+
+起動時（最初の広告呼び出し前）に `KuaiShouMiniGameAdvertisementBootstrap.Config` へ代入し、強く型付けされたチャネル設定を注入します：
+
+```csharp
+using GameFrameX.Advertisement.KuaiShouMiniGame.Runtime;
+
+KuaiShouMiniGameAdvertisementBootstrap.Config = new KuaiShouMiniGameAdvertisementConfig
+{
+    adUnitId = "広告ユニットID",
+    isDebug = false,
+};
+```
+
+チャネル定数 `KuaiShouMiniGameAdvertisementManager.ChannelId` の値は `"kuaishouminigame"` です。明示的ルーティング `AdvertisementRegistry.ResolveManager("kuaishouminigame")` も利用できます。
 ## プラットフォーム対応
 
 | プラットフォーム | 対応 |
@@ -105,6 +123,12 @@
 - 初回リリース
 - 快手ミニゲームプラットフォームのリワード動画広告対応
 - IL2CPP ストリッピング保護
+
+### 破壊的変更と移行
+
+- `AdvertisementComponent` の WebGL 快手用マクロ選択広告ユニットID のシリアライズフィールドは削除されました。`adUnitId` は `KuaiShouMiniGameAdvertisementBootstrap.Config` 経由で注入します；
+- コアパッケージの Inspector タイプドロップダウンは削除され、チャネル発見は `AdvertisementRegistry` に統一されました；
+- 抖音チャネルパッケージから複製された旧命名ファイルは `KuaiShou` 命名に修正されました（`KuaiShouMiniGameAdvertisementManager.cs`、`KuaiShouVideoAdCallback.cs`、名前空間 `GameFrameX.Advertisement.KuaiShouMiniGame.Runtime`）。
 
 
 ## 依存関係

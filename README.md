@@ -35,13 +35,15 @@ KuaiShou Mini Game platform adapter for the [Game Frame X Advertisement](https:/
 
 ## Architecture
 
-This package is an **adapter implementation** of `BaseAdvertisementManager` from the Game Frame X Advertisement core. It is discovered and loaded automatically by `AdvertisementComponent` via Unity Inspector configuration.
+This package is an **adapter implementation** of `BaseAdvertisementManager` from the Game Frame X Advertisement core. It registers itself into the core `AdvertisementRegistry` via `KuaiShouMiniGameAdvertisementBootstrap` at the `BeforeSceneLoad` stage; when the macros `UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT` are not enabled the code is stripped and registration does not happen (referencing the package is the registration). Initialization is injected as a strongly-typed config by the factory closure.
 
 | Class | Description |
 |-------|-------------|
 | `KuaiShouMiniGameAdvertisementManager` | Rewarded video ad manager — load, show, and lifecycle |
 | `KuaiShouVideoAdCallback` | Callback handler for ad load/show events |
 | `GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper` | IL2CPP link.xml alternative — preserves type references |
+| `KuaiShouMiniGameAdvertisementConfig` | Strongly-typed channel config — with the `adUnitId` field |
+| `KuaiShouMiniGameAdvertisementBootstrap` | Channel bootstrap registration — self-registers into `AdvertisementRegistry` at `BeforeSceneLoad`, with a startup-time `Config` static property |
 
 ## Quick Start
 
@@ -77,6 +79,22 @@ Choose one of the following methods:
    ```
 3. Use **Package Manager** in Unity with **Git URL**: `https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame.git`
 4. Clone the repository into your Unity project's `Packages` directory. It will be loaded automatically.
+
+### Channel Registration & Configuration
+
+At startup (before the first ad call), assign `KuaiShouMiniGameAdvertisementBootstrap.Config` to inject the strongly-typed channel config:
+
+```csharp
+using GameFrameX.Advertisement.KuaiShouMiniGame.Runtime;
+
+KuaiShouMiniGameAdvertisementBootstrap.Config = new KuaiShouMiniGameAdvertisementConfig
+{
+    adUnitId = "your ad unit id",
+    isDebug = false,
+};
+```
+
+The channel constant `KuaiShouMiniGameAdvertisementManager.ChannelId` is `"kuaishouminigame"`; explicit routing via `AdvertisementRegistry.ResolveManager("kuaishouminigame")` is available.
 ## Platform Support
 
 | Platform | Supported |
@@ -105,6 +123,12 @@ Choose one of the following methods:
 - Initial release
 - Rewarded video ad support for KuaiShou Mini Game platform
 - IL2CPP cropping protection
+
+### Breaking Changes & Migration
+
+- The WebGL KuaiShou macro-selected ad unit ID serialized field on `AdvertisementComponent` has been removed; `adUnitId` is now injected via `KuaiShouMiniGameAdvertisementBootstrap.Config`;
+- The core package's Inspector type dropdown has been removed; channel discovery is consolidated into `AdvertisementRegistry`;
+- Legacy files copied from the douyin channel package have been corrected to `KuaiShou` naming (`KuaiShouMiniGameAdvertisementManager.cs`, `KuaiShouVideoAdCallback.cs`, namespace `GameFrameX.Advertisement.KuaiShouMiniGame.Runtime`).
 
 
 ## Dependencies
