@@ -1,6 +1,5 @@
 ﻿#if UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT
 using System;
-using UnityEngine.Scripting;
 
 namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
 {
@@ -10,7 +9,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
     /// <remarks>
     /// KuaiShou video ad callback handler, managing callbacks for ad loading, display, and close events.
     /// </remarks>
-    [Preserve]
+    [UnityEngine.Scripting.Preserve]
     internal class KuaiShouVideoAdCallback
     {
         private Action<string> loadSuccess;
@@ -24,7 +23,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// Gets or sets the ad show result callback, parameter indicates whether the user watched the effective duration.
         /// </remarks>
         /// <value>展示结果回调 / Show result callback</value>
-        [Preserve] public Action<bool> ShowResult { get; set; }
+        [UnityEngine.Scripting.Preserve] public Action<bool> ShowResult { get; set; }
         
         /// <summary>
         /// 当视频广告加载完成时调用。
@@ -32,7 +31,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// <remarks>
         /// Called when the video ad has finished loading.
         /// </remarks>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public void OnVideoLoaded()
         {
             loadSuccess?.Invoke(null);
@@ -45,7 +44,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// Called when the video ad is successfully shown.
         /// </remarks>
         /// <param name="timestamp">广告展示的时间戳 / Timestamp when the ad was shown</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public void OnVideoShow(long timestamp)
         {
             showSuccess?.Invoke(timestamp.ToString());
@@ -59,7 +58,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// </remarks>
         /// <param name="errCode">错误码 / Error code</param>
         /// <param name="errorMessage">错误信息 / Error message</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public void OnError(int errCode, string errorMessage)
         {
             loadFail?.Invoke(errorMessage);
@@ -75,7 +74,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// <param name="watchedTime">实际观看时长（秒） / Actual watched duration in seconds</param>
         /// <param name="effectiveTime">有效观看时长阈值（秒） / Effective watch duration threshold in seconds</param>
         /// <param name="duration">视频总时长（秒） / Total video duration in seconds</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public void OnVideoClose(int watchedTime, int effectiveTime, int duration)
         {
             ShowResult?.Invoke(watchedTime >= effectiveTime);
@@ -90,7 +89,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// </remarks>
         /// <param name="success">加载成功回调 / Load success callback</param>
         /// <param name="fail">加载失败回调 / Load failure callback</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public void SetLoadCallback(Action<string> success, Action<string> fail)
         {
             loadSuccess = success;
@@ -105,7 +104,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// </remarks>
         /// <param name="success">展示成功回调 / Show success callback</param>
         /// <param name="fail">展示失败回调 / Show failure callback</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public void SetShowCallback(Action<string> success, Action<string> fail)
         {
             showSuccess = success;

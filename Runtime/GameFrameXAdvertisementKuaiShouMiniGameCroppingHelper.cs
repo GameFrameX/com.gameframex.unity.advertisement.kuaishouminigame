@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Scripting;
 
 namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
 {
@@ -9,10 +8,10 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
     /// <remarks>
     /// KuaiShou mini-game advertisement cropping helper, used to ensure type references are preserved during IL2CPP stripping.
     /// </remarks>
-    [Preserve]
+    [UnityEngine.Scripting.Preserve]
     public class GameFrameXAdvertisementKuaiShouMiniGameCroppingHelper : MonoBehaviour
     {
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         private void Start()
         {
 #if UNITY_WEBGL && ENABLE_KUAISHOU_MINI_GAME && ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT

@@ -4,7 +4,6 @@ using System;
 using GameFrameX.Advertisement.Runtime;
 using GameFrameX.Runtime;
 using UnityEngine;
-using UnityEngine.Scripting;
 
 namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
 {
@@ -17,13 +16,13 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
     /// <see cref="Initialize(AdvertisementConfig)"/> 的强类型 <see cref="KuaiShouMiniGameAdvertisementConfig"/>
     /// （由 KuaiShouMiniGameAdvertisementBootstrap 工厂闭包注入，adUnitId 自组件宏选字段下沉而来）。
     /// </remarks>
-    [Preserve]
+    [UnityEngine.Scripting.Preserve]
     public class KuaiShouMiniGameAdvertisementManager : BaseAdvertisementManager
     {
         /// <summary>
         /// 快手小游戏渠道唯一标识。
         /// </summary>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public const string ChannelId = "kuaishouminigame";
 
         private KSWASM.RewardVideoAd _adManager;
@@ -37,7 +36,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// Initializes the ad manager with the strongly-typed KuaiShou mini-game configuration.
         /// </remarks>
         /// <param name="config">快手小游戏渠道配置 / KuaiShou mini-game channel configuration</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public override void Initialize(AdvertisementConfig config)
         {
             var kuaiShouConfig = config as KuaiShouMiniGameAdvertisementConfig;
@@ -61,7 +60,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// <param name="adUnitId">广告单元Id / Ad unit ID</param>
         /// <param name="debug">是否启用调试模式 / Whether to enable debug mode</param>
         /// <exception cref="ArgumentException">当 <paramref name="adUnitId"/> 为 null 或空字符串时抛出 / Thrown when <paramref name="adUnitId"/> is null or empty</exception>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public override void Initialize(string adUnitId, bool debug = false)
         {
             GameFrameworkGuard.NotNullOrEmpty(adUnitId, nameof(adUnitId));
@@ -69,7 +68,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
             _kuaiShouVideoAdCallback = new KuaiShouVideoAdCallback();
         }
 
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         void OnCloseCallback(KSWASM.KSRewardedVideoAdOnCloseResponse ksRewardedVideoAdOnCloseResponse)
         {
             _kuaiShouVideoAdCallback.ShowResult?.Invoke(ksRewardedVideoAdOnCloseResponse.isEnded);
@@ -86,7 +85,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// </remarks>
         /// <param name="playResult">播放结果回调，参数表示是否成功观看完整广告 / Play result callback, parameter indicates whether the ad was watched completely</param>
         /// <param name="customData">自定义透传数据 / Custom transparent data</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public override void Play(Action<bool> playResult, string customData = null)
         {
             Load((x) => { Show((s) => { Debug.Log($"Play Success：{s}"); }, (f) => { Debug.Log($"Play Fail：{f}"); }, playResult); }, (x) =>
@@ -118,7 +117,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// <param name="fail">展示失败回调 / Show failure callback</param>
         /// <param name="onShowResult">展示结果回调，参数表示用户是否观看完整广告 / Show result callback, parameter indicates whether the user watched the ad completely</param>
         /// <param name="customData">自定义透传数据 / Custom transparent data</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public override void Show(Action<string> success, Action<string> fail, Action<bool> onShowResult, string customData = null)
         {
             OnShowResult = onShowResult;
@@ -159,7 +158,7 @@ namespace GameFrameX.Advertisement.KuaiShouMiniGame.Runtime
         /// <param name="success">加载成功回调 / Load success callback</param>
         /// <param name="fail">加载失败回调 / Load failure callback</param>
         /// <param name="customData">自定义透传数据 / Custom transparent data</param>
-        [Preserve]
+        [UnityEngine.Scripting.Preserve]
         public override void Load(Action<string> success, Action<string> fail, string customData = null)
         {
             if (_adManager != null)
