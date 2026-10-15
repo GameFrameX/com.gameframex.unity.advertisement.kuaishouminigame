@@ -3,7 +3,7 @@
   "displayName": "Game Frame X Advertisement (KuaiShou Mini Game)",
   "category": "Game Frame X",
   "description": "GameFrameX Advertisement KuaiShou Mini Game — KuaiShou Mini Game rewarded video ad adapter for GameFrameX Advertisement. Implements BaseAdvertisementManager as KuaiShouMiniGameAdvertisementManager handling load, show and lifecycle, with KuaiShouVideoAdCallback processing ad events and automatic reloading on show failure. KuaiShouMiniGameAdvertisementBootstrap self-registers the channel into AdvertisementRegistry at BeforeSceneLoad and injects the strongly typed adUnitId config; code is compiled only when UNITY_WEBGL with ENABLE_KUAISHOU_MINI_GAME and ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT macros is enabled, and is protected against IL2CPP stripping. Docs: https://gameframex.doc.alianblank.com\n\nGameFrameX Advertisement KuaiShou Mini Game — GameFrameX Advertisement 的快手小游戏激励视频广告渠道包。以 KuaiShouMiniGameAdvertisementManager 实现 BaseAdvertisementManager，负责加载、展示与生命周期管理，由 KuaiShouVideoAdCallback 处理广告事件并在展示失败后自动重试。KuaiShouMiniGameAdvertisementBootstrap 在 BeforeSceneLoad 阶段自注册进 AdvertisementRegistry，注入含 adUnitId 的强类型配置；仅当 UNITY_WEBGL 且启用 ENABLE_KUAISHOU_MINI_GAME 与 ENABLE_KUAISHOU_MINI_GAME_ADVERTISEMENT 宏时参与编译，并带 IL2CPP 裁剪保护。文档：https://gameframex.doc.alianblank.com",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "unity": "2019.4",
   "keywords": [
     "Game Frame X"

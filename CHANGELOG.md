@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/compare/1.1.0...1.2.0) (2026-10-15)
+
+
+### Features
+
+* **advertisement.kuaishouminigame:** 适配 GameFrameX 3.0.0 ([c0d9096](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/commit/c0d90968e3119accadc6e8e7f2379867528e4730))
+* **advertisement:** 新增渠道自注册引导并修正命名 ([78754e5](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/commit/78754e5de3ad7ef4b1b91ad45e48c97118ad8522))
+
 # [1.1.0](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/compare/1.0.1...1.1.0) (2026-07-29)
 
 
