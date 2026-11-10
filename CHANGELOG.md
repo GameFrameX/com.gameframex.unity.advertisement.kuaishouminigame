@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/compare/1.2.0...1.2.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* **advertisement.kuaishouminigame:** 添加完整 link.xml 防代码裁剪保护 ([52e8bc9](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/commit/52e8bc9773dd8b4181bb0d18cd3d041ccf78f34e))
+
 # [1.2.0](https://github.com/gameframex/com.gameframex.unity.advertisement.kuaishouminigame/compare/1.1.0...1.2.0) (2026-10-15)
 
 
